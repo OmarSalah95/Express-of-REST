@@ -47,10 +47,10 @@ postsRouter.get('/:id', (req, res) => {
 postsRouter.delete('/:id', (req, res) => {
   db.remove(req.params.id)
     .then(remove => {
-      res.status(204).end();
+      res.status(204).json(remove.id);
     })
     .catch(error => {
-      res.status(500).json('Homie beat me up, cant get it!');
+      res.status(500).json({message: error});
     });
 });
 
@@ -76,7 +76,7 @@ postsRouter.put('/:id', (req, res) => {
 
   db.findById(req.params.id)
     .then(post => {
-      if (post) {
+      if (post[0]) {
         if (title && contents) {
           db.update(req.params.id, req.body).then(post => {
             res.status(200).json(req.body);
