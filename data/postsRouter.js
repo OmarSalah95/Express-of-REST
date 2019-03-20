@@ -44,33 +44,29 @@ postsRouter.get('/:id', (req, res) => {
 });
 
 // --------------------------------- DELETE -----------------------------------//
-postsRouter.delete('/:id', (req, res) => {
-  db.remove(req.params.id)
-    .then(remove => {
-      res.status(204).json(remove.id);
-    })
-    .catch(error => {
-      res.status(500).json({message: error});
-    });
-});
-
-// postRouter.delete('/:id', (req, res) => {
-//   db.findById(req.params.id)
-//     .then(post => {
-//       if (post[0]) {
-//         db.remove(req.params.id).then(res.status(200).json(post[0]));
-//       } else 
-//         res
-//           .status(404)
-//           .json({ message: "That Post doesn't exist" });
-//       }
+// postsRouter.delete('/:id', (req, res) => {
+//   db.remove(req.params.id)
+//     .then(remove => {
+//       res.status(204).json(remove.id);
 //     })
-//     .catch(err => {
-//       res.status(500).json({ message: 'Failed to remove post.' });
+//     .catch(error => {
+//       res.status(500).json({message: error});
 //     });
 // });
 
-// // --------------------------------- PUT -----------------------------------//
+postRouter.delete('/:id', (req, res) => {
+  db.findById(req.params.id)
+    .then(post => {
+      post[0]
+        ?  db.remove(req.params.id).then(res.status(200).json(post[0]))
+        :  res.status(404).json({ message: "That Post doesn't exist" });
+    })
+    .catch(err => {
+      res.status(500).json({ message: 'Failed to remove post.' });
+    });
+});
+
+// --------------------------------- PUT -----------------------------------//
 postsRouter.put('/:id', (req, res) => {
   const { title, contents } = req.body;
 
